@@ -1,0 +1,82 @@
+## Create a Basic Flask App
+from flask import Flask, render_template
+import datetime
+import random
+
+app = Flask(__name__)
+
+# List of random quotes
+quotes = [
+    "Life is what happens when you're busy making other plans.",
+    "The greatest glory in living lies not in never falling, but in rising every time we fall.",
+    "The purpose of our lives is to be happy.",
+    "Get busy living or get busy dying.",
+    "You only live once, but if you do it right, once is enough."
+]
+
+# Route for the homepage
+@app.route('/')
+def index():
+    # Generate dynamic content
+    current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    random_quote = random.choice(quotes)
+    
+    # Render the template with dynamic content
+    return render_template('index.html', time=current_time, quote=random_quote)
+
+if __name__ == "__main__":
+    app.run(debug=True)
+
+
+##Create the HTML Template
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Web Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+        header, footer {
+            background-color: #333;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+        }
+        main {
+            padding: 20px;
+            text-align: center;
+        }
+        .dynamic-content {
+            margin-top: 20px;
+            font-size: 1.5em;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Welcome to the Dynamic Web Page</h1>
+    </header>
+
+    <main>
+        <h2>Dynamic Content</h2>
+        <p class="dynamic-content">Current Time: {{ time }}</p>
+        <p class="dynamic-content">Random Quote: "{{ quote }}"</p>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Dynamic Content Webpage</p>
+    </footer>
+</body>
+</html>
+
+
+###Running the Flask App
+
+python app.py
