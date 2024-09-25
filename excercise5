@@ -1,0 +1,105 @@
+#Set Up SQLite Database
+
+from flask import Flask, render_template, request, redirect, url_for
+from flask_sqlalchemy import SQLAlchemy
+
+app = Flask(__name__)
+
+# Configure the SQLite database
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db = SQLAlchemy(app)
+
+# Create a user model
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(100), nullable=False)
+
+# Create the database
+with app.app_context():
+    db.create_all()
+
+# Route to render the form
+@app.route('/')
+def form():
+    return render_template('form.html')
+
+# Route to handle form submission
+@app.route('/submit', methods=['POST'])
+def submit():
+    if request.method == 'POST':
+        name = request.form['name']
+        email = request.form['email']
+        new_user = User(name=name, email=email)
+        db.session.add(new_user)
+        db.session.commit()
+        return redirect(url_for('display_users'))
+
+# Route to display stored data
+@app.route('/users')
+def display_users():
+    users = User.query.all()
+    return render_template('users.html', users=users)
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
+## Create the HTML Templates##
+<!-- templates/form.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Form</title>
+</head>
+<body>
+    <h1>User Details Form</h1>
+    <form action="/submit" method="POST">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required><br><br>
+        
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required><br><br>
+        
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>
+
+
+#### users.html
+
+html
+<!-- templates/users.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stored Users</title>
+</head>
+<body>
+    <h1>Submitted Users</h1>
+    <table border="1">
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+        </tr>
+        {% for user in users %}
+        <tr>
+            <td>{{ user.name }}</td>
+            <td>{{ user.email }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <br>
+    <a href="/">Back to Form</a>
+</body>
+</html>
+
+
+ ## Run the Application
+
+python app.py
