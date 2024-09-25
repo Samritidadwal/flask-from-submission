@@ -1,0 +1,105 @@
+pip install flask
+
+##Create the Flask App (app.py)
+
+from flask import Flask, render_template
+
+# Create an instance of the Flask class
+app = Flask(__name__)
+
+# Define the route for the root URL ('/')
+@app.route('/')
+def home():
+    # Serve the HTML file located in the templates folder
+    return render_template('index.html')
+
+# Run the server
+if __name__ == '__main__':
+    app.run(debug=True)
+
+## NOW ADDING HTML and CSS Files
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Assignment - Simple Web Page</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <!-- Header with Title and Navigation Menu -->
+    <header>
+        <h1>Assignment Web Page</h1>
+        <nav>
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Services</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Main Content Area -->
+    <main>
+        <h2>Welcome to My Web Page</h2>
+        <p>This is a simple HTML page served using Flask.</p>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 My Web Page</p>
+    </footer>
+</body>
+</html>
+
+
+###CSS (styles.css) file
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+header {
+    background-color: #333;
+    color: white;
+    padding: 10px;
+    text-align: center;
+}
+
+nav ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+nav ul li {
+    display: inline;
+    margin-right: 10px;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+}
+
+main {
+    padding: 20px;
+}
+
+footer {
+    text-align: center;
+    padding: 10px;
+    background-color: #333;
+    color: white;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+}
+
+##run the webserver
+
+python app.py
+
